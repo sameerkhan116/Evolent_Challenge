@@ -4,6 +4,8 @@ export default {
   Query: {
     allUsers: (parent, args, { models }) =>
       models.User.findAll(),
+    user: (parent, { id }, { models }) =>
+      models.User.findOne({ where: { id } }),
   },
   Mutation: {
     addUser: async (parent, args, { models }) => {

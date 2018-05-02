@@ -10,6 +10,7 @@ export default `
 
   type Query {
     allUsers: [User!]!
+    user(id: Int!): User!
   }
 
   type Mutation {
