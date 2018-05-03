@@ -39,7 +39,7 @@ const MutationButton = ({ id, history }) => (
         }}
       </Mutation>
       <Query query={USER} variables={{ id }}>
-        {({ loading, error, data }) => {
+        {({ loading, data }) => {
           if (loading) return null;
           const {
             firstname, lastname, email, phone, status,
