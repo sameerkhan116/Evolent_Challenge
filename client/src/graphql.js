@@ -52,3 +52,15 @@ export const USER = gql`
     }
   }
 `;
+
+export const UPDATE_USER = gql`
+  mutation($id: Int!, $firstname: String!, $lastname: String!, $email: String!, $status: Boolean!, $phone: String!) {
+    updateUser(id: $id, firstname: $firstname, lastname: $lastname, email: $email, status: $status, phone: $phone) {
+      ok
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;

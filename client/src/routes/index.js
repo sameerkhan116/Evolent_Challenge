@@ -5,6 +5,7 @@ import { Menu, Image, Container, Header } from 'semantic-ui-react';
 import Home from './Home';
 import Register from './Register';
 import User from './User';
+import Update from './Update';
 
 const Routes = () => (
   <Router>
@@ -30,6 +31,7 @@ const Routes = () => (
         <Route exact path="/" component={Home} />
         <Route exact path="/add-contact" component={Register} />
         <Route exact path="/user/:id" component={User} />
+        <Route exact path="/update/:id" component={props => <Update {...props} />} />
       </Switch>
     </div>
   </Router>

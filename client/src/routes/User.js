@@ -1,42 +1,71 @@
 import React from 'react';
 import { Mutation, Query } from 'react-apollo';
 import { Container, Card, Button, Message, Icon } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
-import { DELETE_USER, USER, ALL_USERS as query } from '../graphql';
+import { USER, DELETE_USER } from '../graphql';
 
 const MutationButton = ({ id, history }) => (
   <Card.Content extra>
-    <Mutation mutation={DELETE_USER} key="delete">
-      {(mutate, { loading, error }) => {
-        if (loading) {
+    <div className="ui two buttons">
+      <Mutation mutation={DELETE_USER} key="delete">
+        {(mutate, { loading, error }) => {
+          if (loading) {
+            return (
+              <div>Loading...</div>
+            );
+          }
+          if (error) {
+            return (
+              <div>Error</div>
+            );
+          }
           return (
-            <div>Loading...</div>
+            <Button
+              color="red"
+              basic
+              fluid
+              onClick={async () => {
+              const response = await mutate({
+                variables: { id },
+              });
+              console.log(response);
+              history.push('/', null);
+            }}
+            >
+            Delete this contact
+            </Button>
           );
-        }
-        if (error) {
+        }}
+      </Mutation>
+      <Query query={USER} variables={{ id }}>
+        {({ loading, error, data }) => {
+          if (loading) return null;
+          const {
+            firstname, lastname, email, phone, status,
+          } = data.user;
           return (
-            <div>Error</div>
+            <Button
+              basic
+              color="teal"
+              as={Link}
+              to={{
+                pathname: `/update/${id}`,
+                state: {
+                  firstname,
+                  lastname,
+                  email,
+                  phone,
+                  status,
+                },
+              }}
+            >
+              Update this user
+            </Button>
           );
-        }
-        return (
-          <Button
-            color="red"
-            basic
-            fluid
-            onClick={async () => {
-            const response = await mutate({
-              variables: { id },
-            });
-            console.log(response);
-            console.log(history);
-            history.push('/', null);
-          }}
-          >
-          Delete this user
-          </Button>
-        );
-      }}
-    </Mutation>
+        }}
+      </Query>
+    </div>
   </Card.Content>
 );
 

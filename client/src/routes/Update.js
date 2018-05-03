@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
 
 import CustomForm from '../components/CustomForm';
-import { ADD_USER } from '../graphql';
+import { UPDATE_USER } from '../graphql';
 
-class Register extends Component {
+class Update extends Component {
   state = {
     firstname: '',
     lastname: '',
@@ -18,6 +18,21 @@ class Register extends Component {
     statusError: '',
   }
 
+  componentDidMount = () => {
+    const {
+      firstname, lastname, email, phone, status,
+    } = this.props.location.state;
+
+    this.setState({
+      firstname,
+      lastname,
+      email,
+      phone,
+      status,
+    });
+  };
+
+
   onChange = (e) => {
     const { name, value } = e.target;
     this.setState({
@@ -29,9 +44,11 @@ class Register extends Component {
     const {
       firstname, lastname, email, phone, status,
     } = this.state;
+    const { id } = this.props.match.params;
 
     const response = await this.props.mutate({
       variables: {
+        id,
         firstname,
         lastname,
         email,
@@ -42,10 +59,10 @@ class Register extends Component {
 
     console.log(response);
 
-    const { ok, user, errors } = response.data.addUser;
+    const { ok, errors } = response.data.updateUser;
 
     if (ok) {
-      this.props.history.push(`/user/${user.id}`);
+      this.props.history.push(`/user/${id}`);
     } else {
       const err = {};
       errors.forEach(({ path, message }) => {
@@ -81,7 +98,7 @@ class Register extends Component {
         handleChange={this.handleChange}
         submit={this.onSubmit}
         errorList={errorList}
-        text="Add"
+        text="Update"
         firstname={firstname}
         lastname={lastname}
         email={email}
@@ -91,9 +108,10 @@ class Register extends Component {
         lastnameError={lastnameError}
         emailError={emailError}
         phoneError={phoneError}
+        statusError={statusError}
       />
     );
   }
 }
 
-export default graphql(ADD_USER)(Register);
+export default graphql(UPDATE_USER)(Update);
